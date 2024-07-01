@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  code-mate-db:
+    image: postgres:latest
+    restart: always
+    container_name: code-mate-postgres-container
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: codemate
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres # Adjusted volume syntax here
+
+volumes:
+  postgres:
