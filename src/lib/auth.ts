@@ -5,6 +5,7 @@ import { Adapter } from "next-auth/adapters";
 import { AuthOptions, DefaultSession, getServerSession } from "next-auth";
 
 // This line is used to extend the types of an existing module. In this case, we're extending the next-auth module.
+// Means Session would now have user also
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
