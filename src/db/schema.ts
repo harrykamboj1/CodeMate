@@ -6,7 +6,6 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import postgres from "postgres";
 import type { AdapterAccount } from "next-auth/adapters";
 
 export const testing = pgTable("testing", {
@@ -90,3 +89,15 @@ export const authenticators = pgTable(
     }),
   })
 );
+
+export const room = pgTable("room", {
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  description: text("description"),
+  language: text("language").notNull(),
+  githubRepo: text("githubRepo"),
+});
+
+export type roomSchema = typeof room.$inferInsert;
