@@ -3,6 +3,7 @@
 import { db } from "@/db";
 import { room, roomSchema } from "@/db/schema";
 import { getSession } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
 export async function CreateRoomAction(
   roomData: Omit<roomSchema, "id" | "userId">
@@ -16,4 +17,6 @@ export async function CreateRoomAction(
     ...roomData,
     userId: session.user?.id,
   });
+
+  revalidatePath("/");
 }
