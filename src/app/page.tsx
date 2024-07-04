@@ -21,7 +21,7 @@ function RoomCard({ room }: { room: roomSchema }) {
       </CardHeader>
       <CardContent>
         {room.githubRepo && (
-          <Link className="flex gap-1" href={room.githubRepo!}>
+          <Link className="flex gap-1" href={room.githubRepo}>
             <GithubIcon />
             Github Project
           </Link>
