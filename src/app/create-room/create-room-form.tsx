@@ -20,13 +20,18 @@ import { useRouter } from "next/navigation";
 const githubRepoRegex =
   /^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/;
 
+const regex = /^[a-zA-Z0-9, ]*$/;
+
 const formSchema = z.object({
   name: z.string().min(1).max(50),
   description: z.string().min(1).max(100),
   githubRepo: z.string().regex(githubRepoRegex, {
     message: "Invalid GitHub repository URL",
   }),
-  language: z.string().min(1).max(50),
+  language: z.string().min(1).max(50).regex(regex, {
+    message:
+      "Invalid input: Only alphanumeric characters, commas, and spaces are allowed.",
+  }),
 });
 
 export default function CreateRoomForm() {
@@ -87,7 +92,7 @@ export default function CreateRoomForm() {
             <FormItem>
               <FormLabel>Github Repository</FormLabel>
               <FormControl>
-                <Input placeholder="Enter the Github Repo" {...field} />
+                <Input placeholder="https://github.com/...." {...field} />
               </FormControl>
               <FormDescription>
                 Please put a link to the project you are working on
@@ -101,12 +106,16 @@ export default function CreateRoomForm() {
           name="language"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Primary Programming Language/Framework</FormLabel>
+              <FormLabel>Tags</FormLabel>
               <FormControl>
-                <Input placeholder="Enter the language/Framework" {...field} />
+                <Input
+                  placeholder="typescript, tailwind, java ..."
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
-                List the programming language or Framework you are working on
+                List the programming languages, Frameworks, Libraries you are
+                working on
               </FormDescription>
               <FormMessage />
             </FormItem>
