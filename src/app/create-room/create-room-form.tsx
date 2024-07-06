@@ -28,7 +28,7 @@ const formSchema = z.object({
   githubRepo: z.string().regex(githubRepoRegex, {
     message: "Invalid GitHub repository URL",
   }),
-  language: z.string().min(1).max(50).regex(regex, {
+  tags: z.string().min(1).max(50).regex(regex, {
     message:
       "Invalid input: Only alphanumeric characters, commas, and spaces are allowed.",
   }),
@@ -43,7 +43,7 @@ export default function CreateRoomForm() {
       name: "",
       description: "",
       githubRepo: "",
-      language: "",
+      tags: "",
     },
   });
 
@@ -103,7 +103,7 @@ export default function CreateRoomForm() {
         />
         <FormField
           control={form.control}
-          name="language"
+          name="tags"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tags</FormLabel>

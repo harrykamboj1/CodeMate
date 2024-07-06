@@ -12,7 +12,7 @@ export default async function RoomPage(props: { params: { roomId: string } }) {
     return <div>No room of this Id found</div>;
   }
 
-  const languages = room.language.split(",").map((lang) => lang.trim());
+  const tags = room.tags.split(",").map((tag) => tag.trim());
 
   return (
     <div className="grid grid-cols-4 min-h-screen">
@@ -38,7 +38,7 @@ export default async function RoomPage(props: { params: { roomId: string } }) {
           <p className="text-base text-gray-600">{room?.description}</p>
           <h3>Tags:</h3>
           <div className="flex gap-2 flex-wrap">
-            {languages.map((lang) => (
+            {tags.map((lang) => (
               <Badge className="w-fit" key={lang.toUpperCase()}>
                 {lang}
               </Badge>
