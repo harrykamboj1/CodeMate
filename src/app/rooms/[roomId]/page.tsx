@@ -1,7 +1,9 @@
+import { splitTag, TagList } from "@/components/tag-list";
 import { Badge } from "@/components/ui/badge";
 import { getRoom } from "@/data-access/room";
 import { GithubIcon } from "lucide-react";
 import Link from "next/link";
+import { VideoPlayer } from "./video-player";
 
 export default async function RoomPage(props: { params: { roomId: string } }) {
   const roomId = props.params.roomId;
@@ -12,13 +14,13 @@ export default async function RoomPage(props: { params: { roomId: string } }) {
     return <div>No room of this Id found</div>;
   }
 
-  const tags = room.tags.split(",").map((tag) => tag.trim());
+  const tags = splitTag(room.tags);
 
   return (
     <div className="grid grid-cols-4 min-h-screen">
       <div className="col-span-3  p-4 pr-2">
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm  text-black dark:text-white p-4">
-          VIDEO PLAYER
+          <VideoPlayer />
         </div>
       </div>
       <div className="col-span-1  p-4">
@@ -37,13 +39,7 @@ export default async function RoomPage(props: { params: { roomId: string } }) {
           )}
           <p className="text-base text-gray-600">{room?.description}</p>
           <h3>Tags:</h3>
-          <div className="flex gap-2 flex-wrap">
-            {tags.map((lang) => (
-              <Badge className="w-fit" key={lang.toUpperCase()}>
-                {lang}
-              </Badge>
-            ))}
-          </div>
+          <TagList tags={tags} />
         </div>
       </div>
     </div>
