@@ -32,7 +32,13 @@ function AccountDropDown() {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {session.data ? (
-              <DropdownMenuItem onClick={() => signOut()}>
+              <DropdownMenuItem
+                onClick={() =>
+                  signOut({
+                    callbackUrl: "/",
+                  })
+                }
+              >
                 <div className="flex flex-row gap-x-1">
                   <LogIn className="h-5" /> Sign Out
                 </div>

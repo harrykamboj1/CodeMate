@@ -5,6 +5,8 @@ import { roomSchema } from "@/db/schema";
 import {
   Call,
   CallControls,
+  CallParticipantListing,
+  CallParticipantsList,
   SpeakerLayout,
   StreamCall,
   StreamTheme,
@@ -14,11 +16,13 @@ import {
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { generateToken } from "./actions";
+import { useRouter } from "next/navigation";
 
 const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API_KEY!;
 
 export function DevVideoPlayer({ room }: { room: roomSchema }) {
   const session = useSession();
+  const router = useRouter();
 
   const userId = session.data?.user.id;
 
@@ -34,7 +38,11 @@ export function DevVideoPlayer({ room }: { room: roomSchema }) {
     }
     const client = new StreamVideoClient({
       apiKey,
-      user: { id: userId! },
+      user: {
+        id: userId!,
+        name: session.data.user.name!,
+        image: session.data.user.image!,
+      },
       tokenProvider: () => generateToken(),
     });
     setClient(client);
@@ -43,8 +51,12 @@ export function DevVideoPlayer({ room }: { room: roomSchema }) {
     setCall(call);
 
     return () => {
-      call.leave();
-      client.disconnectUser();
+      call
+        .leave()
+        .then(() => {
+          client.disconnectUser();
+        })
+        .catch(console.error);
     };
   }, [session, room]);
 
@@ -55,7 +67,12 @@ export function DevVideoPlayer({ room }: { room: roomSchema }) {
         <StreamTheme>
           <StreamCall call={call}>
             <SpeakerLayout />
-            <CallControls />
+            <CallControls
+              onLeave={() => {
+                router.push("/");
+              }}
+            />
+            <CallParticipantsList onClose={() => undefined} />
           </StreamCall>
         </StreamTheme>
       </StreamVideo>

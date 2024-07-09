@@ -12,6 +12,7 @@ import { roomSchema } from "@/db/schema";
 import { GithubIcon } from "lucide-react";
 import { getRooms } from "@/data-access/room";
 import { splitTag, TagList } from "@/components/tag-list";
+import { SearchBar } from "@/components/searchBar";
 
 function RoomCard({ room }: { room: roomSchema }) {
   return (
@@ -43,8 +44,12 @@ function RoomCard({ room }: { room: roomSchema }) {
   );
 }
 
-export default async function Home() {
-  const items = await getRooms();
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { search: string };
+}) {
+  const items = await getRooms(searchParams.search);
   return (
     <main className=" min-h-screen  p-16">
       <div className="flex justify-between items-center mb-8">
@@ -53,6 +58,11 @@ export default async function Home() {
           <Link href={"/create-room"}>Create Room</Link>
         </Button>
       </div>
+
+      <div className="mb-12">
+        <SearchBar />
+      </div>
+
       <div className="grid grid-cols-3 gap-4">
         {items.map((item) => {
           return <RoomCard key={item.id} room={item} />;
