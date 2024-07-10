@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { EditRoomAction } from "./actions";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 const githubRepoRegex =
   /^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/;
@@ -35,6 +36,7 @@ const formSchema = z.object({
 });
 
 export default function EditRoomForm({ room }: { room: any }) {
+  const { toast } = useToast();
   const session = useSession();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,6 +57,10 @@ export default function EditRoomForm({ room }: { room: any }) {
       { id: room.id as string, ...values },
       session.data?.user.id!
     );
+    toast({
+      title: "Room updated",
+      description: "Your room was successfully updated",
+    });
   }
 
   return (

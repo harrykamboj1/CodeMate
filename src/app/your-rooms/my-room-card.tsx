@@ -27,8 +27,11 @@ import { TagList } from "@/components/tag-list";
 import { Button } from "@/components/ui/button";
 import { deleteRoomAction } from "./actions";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 export function MyRoomCard({ room }: { room: roomSchema }) {
+  const { toast } = useToast();
+
   const router = useRouter();
   return (
     <Card className="flex flex-col justify-evenly overflow-hidden">
@@ -80,8 +83,12 @@ export function MyRoomCard({ room }: { room: roomSchema }) {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => {
-                  deleteRoomAction(room.id!);
+                onClick={async () => {
+                  await deleteRoomAction(room.id!);
+                  toast({
+                    title: "Room deleted",
+                    description: "Your room was successfully deleted",
+                  });
                 }}
               >
                 Continue

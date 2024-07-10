@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { CreateRoomAction } from "./actions";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 const githubRepoRegex =
   /^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/;
@@ -35,8 +36,8 @@ const formSchema = z.object({
 });
 
 export default function CreateRoomForm() {
+  const { toast } = useToast();
   const router = useRouter();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,7 +50,11 @@ export default function CreateRoomForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     await CreateRoomAction(values);
-    router.push("/");
+    toast({
+      title: "Room created",
+      description: "Your room was successfully created",
+    });
+    router.push(`/browse`);
   }
 
   return (

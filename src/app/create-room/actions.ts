@@ -17,6 +17,5 @@ export async function CreateRoomAction(
     ...roomData,
     userId: session.user?.id,
   });
-
-  revalidatePath("/");
+  revalidatePath("/browse");
 }
