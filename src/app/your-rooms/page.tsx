@@ -1,4 +1,4 @@
-import { SearchBar } from "@/components/searchBar";
+import { SearchBar } from "@/app/browse/searchBar";
 import { Button } from "@/components/ui/button";
 import { getUserRoom } from "@/data-access/room";
 import Link from "next/link";

@@ -7,10 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { TagList } from "./tag-list";
+import { TagList } from "../../components/tag-list";
 import Link from "next/link";
 import { GithubIcon, Trash, Trash2 } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../../components/ui/button";
 import { roomSchema } from "@/db/schema";
 
 export function RoomCard({ room }: { room: roomSchema }) {
