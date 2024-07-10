@@ -19,22 +19,26 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { deleteRoom } from "@/data-access/room";
 
 import Link from "next/link";
-import { GithubIcon, Trash2 } from "lucide-react";
+import { Edit, GithubIcon, Trash2 } from "lucide-react";
 import { roomSchema } from "@/db/schema";
 import { TagList } from "@/components/tag-list";
 import { Button } from "@/components/ui/button";
 import { deleteRoomAction } from "./actions";
-// import { deleteAlertDialogBox } from "@/components/delete-alert-dialogbox";
+import { useRouter } from "next/navigation";
 
 export function MyRoomCard({ room }: { room: roomSchema }) {
+  const router = useRouter();
   return (
     <Card className="flex flex-col justify-evenly overflow-hidden">
       <CardHeader>
         <div className="flex justify-between">
           <CardTitle>{room.name}</CardTitle>
+          <Edit
+            className="hover:cursor-pointer"
+            onClick={() => router.push(`/edit-room?room=${room.id!}`)}
+          />
         </div>
         <CardDescription>{room.description}</CardDescription>
       </CardHeader>

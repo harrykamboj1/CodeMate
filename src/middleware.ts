@@ -7,5 +7,6 @@ export const config = {
     "/rooms",
     "/browse",
     "/rooms/:roomId",
+    "/edit-room",
   ],
 };
