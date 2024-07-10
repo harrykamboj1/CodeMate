@@ -67,7 +67,6 @@ function AccountDropDown() {
 }
 
 export function Header() {
-  const session = useSession();
   return (
     <header className=" bg-gray-200 py-4 dark:bg-gray-900 ">
       <div className="mx-10 flex justify-between items-center">
@@ -80,6 +79,13 @@ export function Header() {
           ></Image>
           <div className="text-xl mt-1 hover:text-blue-200">CodeMate</div>
         </Link>
+
+        <nav>
+          <Link className="hover:underline" href={"/your-rooms"}>
+            Your Rooms
+          </Link>
+        </nav>
+
         <div className="flex flex-row justify-between items-center gap-x-5">
           <AccountDropDown />
           <ModeToggle />

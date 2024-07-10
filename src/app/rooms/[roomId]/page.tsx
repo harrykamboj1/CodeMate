@@ -14,7 +14,7 @@ export default async function RoomPage(props: { params: { roomId: string } }) {
     return <div>No room of this Id found</div>;
   }
 
-  const tags = splitTag(room.tags);
+  const tags = room.tags.split(",").map((tag) => tag.trim());
 
   return (
     <div className="grid grid-cols-4 min-h-screen">
