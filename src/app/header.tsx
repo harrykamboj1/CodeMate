@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { ModeToggle } from "@/components/theme-mode-toggle";
+import DeleteAccountAction from "./actions";
 // import { deleteAccountAction } from "./actions";
 
 function AccountDropdown() {
@@ -46,9 +47,11 @@ function AccountDropdown() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={async () => {
-                {
-                }
-                signOut({ callbackUrl: "/" });
+                await DeleteAccountAction();
+                setOpen(false);
+                signOut({
+                  callbackUrl: "/",
+                });
               }}
             >
               Yes, delete my account

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { getUserRoom } from "@/data-access/room";
 import Link from "next/link";
 import { MyRoomCard } from "./my-room-card";
+import Image from "next/image";
 
 export default async function YourRoomPage() {
   const items = await getUserRoom();
@@ -24,6 +25,23 @@ export default async function YourRoomPage() {
           return <MyRoomCard key={item.id} room={item} />;
         })}
       </div>
+
+      {items.length === 0 && (
+        <div className="flex flex-col gap-4 justify-center items-center mt-24">
+          <Image
+            src="/no-data.svg"
+            width="200"
+            height="200"
+            alt="no data image"
+          />
+
+          <h2 className="text-2xl">You have no rooms</h2>
+
+          <Button asChild>
+            <Link href="/create-room">Create Room</Link>
+          </Button>
+        </div>
+      )}
     </main>
   );
 }
