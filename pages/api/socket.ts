@@ -33,13 +33,11 @@ export default function handler(
           .from(messages)
           .where(eq(messages.roomId, roomId))
           .execute();
-        console.log("prevMessages :: " + prevMessages);
+
         socket.emit("prevMessages", prevMessages);
       });
 
       socket.on("message", async (message: Omit<messageSchema, "id">) => {
-        // Save message to the database
-        console.log(message);
         const [saveMessage] = await db
           .insert(messages)
           .values({ ...message })
@@ -48,6 +46,32 @@ export default function handler(
         // Send message to all clients in the room
         io.to(message.roomId).emit("message", saveMessage);
       });
+
+      socket.on("updateMessage", async (message: messageSchema) => {
+        // Save message to the database
+        console.log(message);
+        const [updateMessage] = await db
+          .update(messages)
+          .set({ message: message.message })
+          .where(eq(messages.id, message.id!))
+          .returning();
+
+        // Send message to all clients in the room
+        io.to(message.roomId).emit("messageUpdated", updateMessage);
+      });
+
+      socket.on(
+        "deleteMessage",
+        async (object: { id: string; roomId: string }) => {
+          console.log(object.id);
+          const [deleteMessage] = await db
+            .delete(messages)
+            .where(eq(messages.id, object.id!))
+            .returning();
+
+          io.to(object.roomId).emit("messageDeleted", deleteMessage);
+        }
+      );
 
       socket.on("disconnect", () => {
         console.log("Client disconnected");

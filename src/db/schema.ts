@@ -121,6 +121,7 @@ export const messages = pgTable("chatMessages", {
     .references(() => users.id, { onDelete: "cascade" }),
   message: text("message").notNull(),
   createdAt: timestamp("timestamp").notNull().defaultNow(),
+  image: text("image"),
 });
 
 export type messageSchema = typeof messages.$inferInsert;

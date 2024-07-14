@@ -57,7 +57,7 @@ export function DevVideoPlayer({ room }: { room: roomSchema }) {
         })
         .catch(console.error);
     };
-  }, [session, room]);
+  }, [session, room, userId]);
 
   return (
     client &&
