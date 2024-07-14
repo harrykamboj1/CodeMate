@@ -1,6 +1,6 @@
 # CodeMate
 
-CodeMate is an innovative application designed to connect developers and facilitate collaboration. With CodeMate, you can find and join rooms, share your screen, send messages, and reply to each other, enhancing your coding experience and productivity.
+CodeMate is an application designed to connect developers and facilitate collaboration. With CodeMate, you can find and join rooms, share your screen, send messages, and reply to each other, enhancing your coding experience and productivity.
 
 ## Features
 
