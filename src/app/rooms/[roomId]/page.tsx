@@ -1,13 +1,13 @@
-import { splitTag, TagList } from "@/components/tag-list";
-import { Badge } from "@/components/ui/badge";
+import { TagList } from "@/components/tag-list";
 import { getRoom } from "@/data-access/room";
 import { GithubIcon } from "lucide-react";
 import Link from "next/link";
 import { DevVideoPlayer } from "./video-player";
+import ChatCard from "./chart-card";
+import { useSession } from "next-auth/react";
 
 export default async function RoomPage(props: { params: { roomId: string } }) {
   const roomId = props.params.roomId;
-
   const room = await getRoom(roomId);
 
   if (!room) {
@@ -23,7 +23,7 @@ export default async function RoomPage(props: { params: { roomId: string } }) {
           <DevVideoPlayer room={room} />
         </div>
       </div>
-      <div className="col-span-1  p-4">
+      <div className="flex flex-col col-span-1 p-4 gap-y-5">
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm  text-black dark:text-white p-4 flex flex-col gap-4">
           <h1 className="text-base">{room?.name}</h1>
           {room.githubRepo && (
@@ -40,6 +40,9 @@ export default async function RoomPage(props: { params: { roomId: string } }) {
           <p className="text-base text-gray-600">{room?.description}</p>
           <h3>Tags:</h3>
           <TagList tags={tags} />
+        </div>
+        <div>
+          <ChatCard room={room} />
         </div>
       </div>
     </div>

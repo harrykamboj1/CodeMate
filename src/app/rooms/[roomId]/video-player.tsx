@@ -5,7 +5,6 @@ import { roomSchema } from "@/db/schema";
 import {
   Call,
   CallControls,
-  CallParticipantListing,
   CallParticipantsList,
   SpeakerLayout,
   StreamCall,

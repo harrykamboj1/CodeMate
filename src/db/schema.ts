@@ -107,3 +107,20 @@ export const room = pgTable("room", {
 });
 
 export type roomSchema = typeof room.$inferInsert; // For Insert
+
+export const messages = pgTable("chatMessages", {
+  id: uuid("id")
+    .default(sql`gen_random_uuid()`)
+    .notNull()
+    .primaryKey(),
+  roomId: text("roomId")
+    .notNull()
+    .references(() => room.id, { onDelete: "cascade" }),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  message: text("message").notNull(),
+  createdAt: timestamp("timestamp").notNull().defaultNow(),
+});
+
+export type messageSchema = typeof messages.$inferInsert;
