@@ -26,7 +26,7 @@ export function SearchBar() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      search: query.get("search") ?? "",
+      search: query!.get("search") ?? "",
     },
   });
 
@@ -65,7 +65,7 @@ export function SearchBar() {
           <SearchIcon className="mr-2" /> Search
         </Button>
 
-        {query.get("search") && (
+        {query!.get("search") && (
           <Button
             className="ml-5 mt-7"
             variant="link"
