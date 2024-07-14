@@ -14,6 +14,8 @@ import { getRooms } from "@/data-access/room";
 import { TagList } from "@/components/tag-list";
 import { SearchBar } from "@/app/browse/searchBar";
 import Image from "next/image";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 function RoomCard({ room }: { room: roomSchema }) {
   return (
@@ -50,6 +52,11 @@ export default async function Home({
 }: {
   searchParams: { search: string };
 }) {
+  const session = await getSession();
+  if (!session) {
+    redirect("/");
+  }
+
   const items = await getRooms(searchParams.search);
   return (
     <main className=" min-h-screen  p-16">

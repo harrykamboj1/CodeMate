@@ -5,11 +5,17 @@ import { Server as IOServer } from "socket.io";
 import { db } from "@/db";
 import { messages, messageSchema, room } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { getSession } from "@/lib/auth";
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponseServerIo
 ) {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error("you must be logged in to delete your account");
+  }
   if (!res.socket.server.io) {
     console.log("Initializing Socket.Io");
 

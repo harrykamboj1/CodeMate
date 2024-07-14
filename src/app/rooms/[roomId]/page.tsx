@@ -4,10 +4,16 @@ import { GithubIcon } from "lucide-react";
 import Link from "next/link";
 import { DevVideoPlayer } from "./video-player";
 import ChatCard from "./chart-card";
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
 
 export default async function RoomPage(props: { params: { roomId: string } }) {
   const roomId = props.params.roomId;
   const room = await getRoom(roomId);
+  const session = await getSession();
+  if (!session) {
+    redirect("/");
+  }
 
   if (!room) {
     return <div>No room of this Id found</div>;

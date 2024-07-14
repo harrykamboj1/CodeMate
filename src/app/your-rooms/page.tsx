@@ -4,9 +4,17 @@ import { getUserRoom } from "@/data-access/room";
 import Link from "next/link";
 import { MyRoomCard } from "./my-room-card";
 import Image from "next/image";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function YourRoomPage() {
+  const session = await getSession();
+  if (!session) {
+    redirect("/");
+  }
+
   const items = await getUserRoom();
+
   return (
     <main className=" min-h-screen  p-16">
       <div className="flex justify-between items-center mb-8">
