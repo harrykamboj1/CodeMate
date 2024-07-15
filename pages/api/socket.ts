@@ -3,19 +3,13 @@ import { Socket as NetSocket } from "net";
 import { Server as HTTPServer } from "http";
 import { Server as IOServer } from "socket.io";
 import { db } from "@/db";
-import { messages, messageSchema, room } from "@/db/schema";
+import { messages, messageSchema, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { getSession } from "@/lib/auth";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponseServerIo
 ) {
-  const session = await getSession();
-
-  if (!session) {
-    throw new Error("you must be logged in to delete your account");
-  }
   if (!res.socket.server.io) {
     console.log("Initializing Socket.Io");
 
@@ -38,16 +32,21 @@ export default async function handler(
           .select()
           .from(messages)
           .where(eq(messages.roomId, roomId))
+          .leftJoin(users, eq(messages.userId, users.id))
           .execute();
 
         socket.emit("prevMessages", prevMessages);
       });
 
       socket.on("message", async (message: Omit<messageSchema, "id">) => {
+        await db.insert(messages).values({ ...message });
+
         const [saveMessage] = await db
-          .insert(messages)
-          .values({ ...message })
-          .returning();
+          .select()
+          .from(messages)
+          .where(eq(messages.roomId, message.roomId))
+          .leftJoin(users, eq(messages.userId, users.id))
+          .execute();
 
         // Send message to all clients in the room
         io.to(message.roomId).emit("message", saveMessage);
@@ -56,11 +55,17 @@ export default async function handler(
       socket.on("updateMessage", async (message: messageSchema) => {
         // Save message to the database
         console.log(message);
-        const [updateMessage] = await db
+        await db
           .update(messages)
           .set({ message: message.message })
-          .where(eq(messages.id, message.id!))
-          .returning();
+          .where(eq(messages.id, message.id!));
+
+        const [updateMessage] = await db
+          .select()
+          .from(messages)
+          .where(eq(messages.roomId, message.roomId))
+          .leftJoin(users, eq(messages.userId, users.id))
+          .execute();
 
         // Send message to all clients in the room
         io.to(message.roomId).emit("messageUpdated", updateMessage);
@@ -70,10 +75,17 @@ export default async function handler(
         "deleteMessage",
         async (object: { id: string; roomId: string }) => {
           console.log(object.id);
-          const [deleteMessage] = await db
+          await db
             .delete(messages)
             .where(eq(messages.id, object.id!))
             .returning();
+
+          const [deleteMessage] = await db
+            .select()
+            .from(messages)
+            .where(eq(messages.roomId, object.roomId))
+            .leftJoin(users, eq(messages.userId, users.id))
+            .execute();
 
           io.to(object.roomId).emit("messageDeleted", deleteMessage);
         }

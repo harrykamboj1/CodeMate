@@ -3,8 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { messageSchema, roomSchema } from "@/db/schema";
-import { Send, SendHorizonalIcon, Edit, Trash, Delete } from "lucide-react";
+import { messageSchema, roomSchema, userSchema } from "@/db/schema";
+import { SendHorizonalIcon, Edit, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
@@ -15,10 +15,12 @@ const socket = io({
   path: "/api/socket",
 });
 
+type MessageSchema = messageSchema & userSchema;
+
 export default function ChatCard({ room }: { room: roomSchema }) {
   const session = useSession();
   const { toast } = useToast();
-  const [messages, setMessages] = useState<messageSchema[]>([]);
+  const [messages, setMessages] = useState<MessageSchema[]>([]);
   const [message, setMessage] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editMessageId, setEditMessageId] = useState<string | null>(null);
@@ -31,11 +33,11 @@ export default function ChatCard({ room }: { room: roomSchema }) {
       setMessages(prevMessages);
     });
 
-    socket.on("message", (message: messageSchema) => {
+    socket.on("message", (message: MessageSchema) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    socket.on("messageUpdated", (updatedMessage: messageSchema) => {
+    socket.on("messageUpdated", (updatedMessage: MessageSchema) => {
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
           msg.id === updatedMessage.id ? updatedMessage : msg
@@ -43,7 +45,7 @@ export default function ChatCard({ room }: { room: roomSchema }) {
       );
     });
 
-    socket.on("messageDeleted", (deleteMessage: messageSchema) => {
+    socket.on("messageDeleted", (deleteMessage: MessageSchema) => {
       setMessages((prevMessages) =>
         prevMessages.filter((msg) => msg.id !== deleteMessage.id)
       );
@@ -108,7 +110,7 @@ export default function ChatCard({ room }: { room: roomSchema }) {
     setMessage(message + emojiData.emoji);
   };
 
-  const startEdit = (msg: messageSchema) => {
+  const startEdit = (msg: MessageSchema) => {
     setEditMode(true);
     setEditMessageId(msg.id!);
     setMessage(msg.message);
