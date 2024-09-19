@@ -14,7 +14,7 @@ const PollingComponent = () => {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 300000);
+    const interval = setInterval(fetchData, 60000);
     return () => clearInterval(interval);
   }, []);
 
