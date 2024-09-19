@@ -5,6 +5,7 @@ import { AuthSessionProvider } from "./provider";
 import { Header } from "./header";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "@/components/ui/toaster";
+import PingServer from "@/components/ping-server";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
           <Header />
           {children}
           <Toaster />
+          <PingServer />
         </AuthSessionProvider>
       </body>
     </html>
